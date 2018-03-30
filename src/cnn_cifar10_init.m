@@ -8,7 +8,7 @@ function net = cnn_cifar10_init(IM1, IM2, F1, F2, K, D, H1, H2, S_CONV, P_S1, P_
 % S: stride
 % F1, F2: filter size
 
-% CNN_MNIST_LENET Initialize a CNN similar for MNIST
+
 opts.batchNormalization = true ;
 opts.networkType = 'simplenn' ;
 opts = vl_argparse(opts, varargin) ;
@@ -24,23 +24,6 @@ im4 = IM2 - F2 + 1;
 F3 = im3/S_P;
 F4 = im4/S_P;
 
-% F3 = IM1 - F1 + 1; 
-% F4 = IM2 - F2 + 1;
-% net.layers{end+1} = struct('type', 'relu') ;
-% 
-% net.layers{end+1} = struct('type', 'pool', ...
-%                            'method', 'avg', ...
-%                            'pool', [8 8], ...
-%                            'stride', 8, ...
-%                            'pad', 0) ;
-% 
-% net.layers{end+1} = struct('type', 'conv', ...
-%                            'weights', {{f*randn(1,1,256,K, 'single'), zeros(1, K, 'single')}}, ...
-%                            'stride', 1, ...
-%                            'pad', 0) ;
-% net.layers{end+1} = struct('type', 'softmaxloss') ;
-
-
 net.layers{end+1} = struct('type', 'conv', ...
                            'weights', {{f*randn(F1, F2, D, H1, 'single'), zeros(1, H1, 'single')}}, ...
                            'stride', S_CONV, ...
@@ -55,20 +38,11 @@ net.layers{end+1} = struct('type', 'pool', ...
                            
 net.layers{end+1} = struct('type', 'relu') ;
 
-
-%net.layers{end+1} = struct('type', 'conv', ...
-%                           'weights', {{f*randn(1,1,H1,H2, 'single'), zeros(1, H2, 'single')}}, ...
-%                           'stride', 1, ...
-%                           'pad', 0) ;
-
-
 net.layers{end+1} = struct('type', 'conv', ...
                            'weights', {{f*randn(F3,F4,H2,K, 'single'), zeros(1, K, 'single')}}, ...
                            'stride', 1, ...
                            'pad', 0) ;
 net.layers{end+1} = struct('type', 'softmaxloss') ;
-
-
 
 
 % optionally switch to batch normalization
@@ -79,9 +53,7 @@ net.layers{end+1} = struct('type', 'softmaxloss') ;
 % end
 
 % Meta parameters
-%net.meta.inputSize = [28 28 1] ;
 net.meta.inputSize = [IM1 IM2 D] ;
-%net.meta.inputSize = [32 32 1] ;
 net.meta.trainOpts.learningRate = 0.001 ;
 net.meta.trainOpts.numEpochs = numEpochs;
 net.meta.trainOpts.batchSize = 100 ;
